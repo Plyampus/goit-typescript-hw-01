@@ -1,17 +1,33 @@
 import axios from "axios";
 
-// Визначення інтерфейсу для структури даних, які можуть бути повернуті.
-// Це може бути будь-який тип, який ви очікуєте отримати від API.
 interface Data {
-  // ...
+  id: number; 
+  title: string; 
+  description: string; 
+  createdAt: Date; 
+  updatedAt: Date;
 }
 
-// Використання Generics для типізації повернутих даних.
 async function fetchData<T = Data>(url: string): Promise<T> {
   try {
     const response = await axios.get<T>(url);
     return response.data;
   } catch (error) {
-    throw new Error(`Error fetching from ${url}: ${error}`);
+    console.error(`Error fetching from ${url}:`, error);
+    throw error; 
   }
 }
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+fetchData<User>("https://api.example.com/users/1")
+  .then((user) => {
+    console.log(user.id); 
+  })
+  .catch((error) => {
+    console.error("Fetch error:", error);
+  });
